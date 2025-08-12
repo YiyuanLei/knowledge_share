@@ -284,6 +284,99 @@ Excess Kurtosis = Kurtosis - 3
 4. **Account for kurtosis in risk models**
 5. **Visualize distributions before analysis**
 
+## 🐍 Python Code Examples
+
+### Generating Skewness Examples
+
+```python
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# Generate different types of skewness
+negative_skew = stats.skewnorm.rvs(a=-3, loc=5, scale=1, size=1000)
+positive_skew = stats.skewnorm.rvs(a=3, loc=2, scale=1, size=1000)
+zero_skew = np.random.normal(loc=5, scale=1, size=1000)
+
+# Calculate statistics
+def calculate_mode(data, bins=30):
+    """Calculate mode using histogram method for continuous data"""
+    hist, bin_edges = np.histogram(data, bins=bins)
+    mode_idx = np.argmax(hist)
+    mode_value = (bin_edges[mode_idx] + bin_edges[mode_idx + 1]) / 2
+    return mode_value
+
+# Print results
+print("Negative Skewness:")
+print(f"Mean: {np.mean(negative_skew):.3f}")
+print(f"Median: {np.median(negative_skew):.3f}")
+print(f"Mode: {calculate_mode(negative_skew):.3f}")
+print(f"Skewness: {stats.skew(negative_skew):.3f}")
+```
+
+### Generating Kurtosis Examples
+
+```python
+# Generate different types of kurtosis
+high_kurtosis = np.random.standard_t(df=3, size=1000)  # Student's t
+low_kurtosis = np.random.uniform(-3, 3, size=1000)     # Uniform
+normal_kurtosis = np.random.standard_normal(size=1000)  # Normal
+
+# Calculate kurtosis
+print("High Kurtosis (Student's t):")
+print(f"Kurtosis: {stats.kurtosis(high_kurtosis):.3f}")
+
+print("Low Kurtosis (Uniform):")
+print(f"Kurtosis: {stats.kurtosis(low_kurtosis):.3f}")
+
+print("Normal Kurtosis:")
+print(f"Kurtosis: {stats.kurtosis(normal_kurtosis):.3f}")
+```
+
+### Financial Returns Example
+
+```python
+# Simulate financial returns
+days = 252 * 5  # 5 years of daily data
+
+# Normal returns (like government bonds)
+normal_returns = np.random.normal(0.0005, 0.02, days)
+
+# Skewed returns (like growth stocks)
+skewed_returns = stats.skewnorm.rvs(a=2, loc=0.0005, scale=0.02, size=days)
+
+# High kurtosis returns (like cryptocurrency)
+high_kurt_returns = np.random.standard_t(df=3, size=days) * 0.02 + 0.0005
+
+# Calculate cumulative returns
+normal_cumulative = np.cumprod(1 + normal_returns)
+skewed_cumulative = np.cumprod(1 + skewed_returns)
+high_kurt_cumulative = np.cumprod(1 + high_kurt_returns)
+
+print("Final values after 5 years:")
+print(f"Normal: ${normal_cumulative[-1]:.2f}")
+print(f"Skewed: ${skewed_cumulative[-1]:.2f}")
+print(f"High Kurtosis: ${high_kurt_cumulative[-1]:.2f}")
+```
+
+## 📈 Interactive Visualizations
+
+For detailed visualizations and examples, see the generated plots:
+
+- [Skewness Examples](../visualizations/skewness_examples.png)
+- [Kurtosis Examples](../visualizations/kurtosis_examples.png)
+- [Distribution Comparison](../visualizations/distribution_comparison.png)
+- [Financial Example](../visualizations/financial_example.png)
+
+To generate these visualizations yourself, run:
+
+```bash
+python3 visualizations/skewness_kurtosis_examples.py
+```
+
 ---
 
 _← [Statistical Concepts](./README.md) | [Type I and Type II Errors](./type-errors.md) →_
