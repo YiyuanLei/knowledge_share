@@ -1,0 +1,22 @@
+# Jekyll configuration for GitHub Pages
+title: Statistical Knowledge Base
+description: A comprehensive collection of statistical concepts, hypothesis testing methods, and probability distributions
+author: Oliver Lei
+
+# Theme settings
+theme: jekyll-theme-cayman
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Navigation
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude from processing
+exclude:
+  - .github
+  - .gitignore
+  - README.md
