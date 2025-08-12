@@ -75,19 +75,7 @@ Excess Kurtosis = Kurtosis - 3
 
 #### Negative Skewness (Left Skewed)
 
-```
-    Distribution Shape:
-
-    Frequency
-        ^
-        |    /\
-        |   /  \
-        |  /    \_______
-        | /             \
-        |/               \
-        +-------------------> Values
-        |  Mode  Median  Mean
-```
+![Negative Skewness Distribution](../visualizations/skewness_examples.png)
 
 **Characteristics:**
 
@@ -98,19 +86,7 @@ Excess Kurtosis = Kurtosis - 3
 
 #### Positive Skewness (Right Skewed)
 
-```
-    Distribution Shape:
-
-    Frequency
-        ^
-        |       /\
-        |      /  \
-        |_____/    \
-        |           \
-        |            \
-        +-------------------> Values
-        |  Mean  Median  Mode
-```
+![Positive Skewness Distribution](../visualizations/skewness_examples.png)
 
 **Characteristics:**
 
@@ -121,19 +97,7 @@ Excess Kurtosis = Kurtosis - 3
 
 #### Zero Skewness (Symmetric)
 
-```
-    Distribution Shape:
-
-    Frequency
-        ^
-        |     /\
-        |    /  \
-        |   /    \
-        |  /      \
-        | /        \
-        +-------------------> Values
-        |  Mode=Median=Mean
-```
+![Zero Skewness Distribution](../visualizations/skewness_examples.png)
 
 **Characteristics:**
 
@@ -146,20 +110,7 @@ Excess Kurtosis = Kurtosis - 3
 
 #### High Kurtosis (Leptokurtic)
 
-```
-    Distribution Shape:
-
-    Frequency
-        ^
-        |      /\
-        |     /  \
-        |    /    \
-        |   /      \
-        |  /        \___
-        | /             \
-        +-------------------> Values
-        |  Sharp peak, fat tails
-```
+![High Kurtosis Distribution](../visualizations/kurtosis_examples.png)
 
 **Characteristics:**
 
@@ -170,20 +121,7 @@ Excess Kurtosis = Kurtosis - 3
 
 #### Low Kurtosis (Platykurtic)
 
-```
-    Distribution Shape:
-
-    Frequency
-        ^
-        |   _______
-        |  /       \
-        | /         \
-        |/           \
-        |             \
-        |              \
-        +-------------------> Values
-        |  Flat peak, thin tails
-```
+![Low Kurtosis Distribution](../visualizations/kurtosis_examples.png)
 
 **Characteristics:**
 
@@ -194,19 +132,7 @@ Excess Kurtosis = Kurtosis - 3
 
 #### Normal Kurtosis (Mesokurtic)
 
-```
-    Distribution Shape:
-
-    Frequency
-        ^
-        |     /\
-        |    /  \
-        |   /    \
-        |  /      \
-        | /        \
-        +-------------------> Values
-        |  Standard normal shape
-```
+![Normal Kurtosis Distribution](../visualizations/kurtosis_examples.png)
 
 **Characteristics:**
 
