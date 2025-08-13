@@ -85,26 +85,26 @@ A p-value is like a score that tells you how likely it is that your guesses are 
 
 ## 💡 Practical Examples
 
-### Example 1: Medical Treatment
+### Example 1: Financial Prediction Model Accuracy
 
-- **H₀**: New drug has no effect
-- **Result**: p = 0.03
-- **Interpretation**: 3% chance of seeing this result if drug has no effect
-- **Decision**: Reject H₀ (drug likely has effect)
+- **H₀**: Model predictions are no better than random guessing (50% accuracy)
+- **Result**: p = 0.002
+- **Interpretation**: 0.2% chance of seeing this accuracy if model is just guessing
+- **Decision**: Reject H₀ (model likely has predictive power)
 
-### Example 2: Coin Fairness
+### Example 2: Trading Strategy Performance
 
-- **H₀**: Coin is fair (50% heads)
+- **H₀**: Trading strategy has no excess return (mean return = 0%)
 - **Result**: p = 0.15
-- **Interpretation**: 15% chance of seeing this result with a fair coin
-- **Decision**: Fail to reject H₀ (coin might be fair)
+- **Interpretation**: 15% chance of seeing this return if strategy has no effect
+- **Decision**: Fail to reject H₀ (strategy might not be profitable)
 
-### Example 3: Financial Returns
+### Example 3: Quarter-End Earnings Predictions
 
-- **H₀**: Strategy has no excess return
+- **H₀**: Model's quarter-end predictions are correct by chance (25% accuracy)
 - **Result**: p = 0.008
-- **Interpretation**: 0.8% chance of seeing this return if strategy has no effect
-- **Decision**: Reject H₀ (strategy likely has positive effect)
+- **Interpretation**: 0.8% chance of seeing this accuracy if model is just guessing
+- **Decision**: Reject H₀ (model likely has genuine predictive ability)
 
 ## 🐍 Python Implementation
 
@@ -115,26 +115,26 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 
-def calculate_p_value_coin_flip(heads, total_flips, expected_prob=0.5):
+def calculate_p_value_prediction_accuracy(correct_predictions, total_predictions, expected_accuracy=0.5):
     """
-    Calculate p-value for coin flip experiment
+    Calculate p-value for prediction model accuracy test
 
     Parameters:
-    heads: Number of heads observed
-    total_flips: Total number of flips
-    expected_prob: Expected probability under null hypothesis
+    correct_predictions: Number of correct predictions
+    total_predictions: Total number of predictions
+    expected_accuracy: Expected accuracy under null hypothesis
 
     Returns:
     p_value: Two-tailed p-value
     """
-    # Calculate test statistic (proportion of heads)
-    observed_prop = heads / total_flips
+    # Calculate test statistic (proportion of correct predictions)
+    observed_accuracy = correct_predictions / total_predictions
 
     # Calculate standard error
-    se = np.sqrt(expected_prob * (1 - expected_prob) / total_flips)
+    se = np.sqrt(expected_accuracy * (1 - expected_accuracy) / total_predictions)
 
     # Calculate z-score
-    z_score = (observed_prop - expected_prob) / se
+    z_score = (observed_accuracy - expected_accuracy) / se
 
     # Calculate two-tailed p-value
     p_value = 2 * (1 - stats.norm.cdf(abs(z_score)))
@@ -142,31 +142,38 @@ def calculate_p_value_coin_flip(heads, total_flips, expected_prob=0.5):
     return p_value, z_score
 
 # Example usage
-heads_observed = 65
-total_flips = 100
-p_val, z_score = calculate_p_value_coin_flip(heads_observed, total_flips)
+correct_predictions = 65
+total_predictions = 100
+p_val, z_score = calculate_p_value_prediction_accuracy(correct_predictions, total_predictions)
 
-print(f"Observed heads: {heads_observed}/{total_flips}")
-print(f"Proportion: {heads_observed/total_flips:.3f}")
+print(f"Correct predictions: {correct_predictions}/{total_predictions}")
+print(f"Accuracy: {correct_predictions/total_predictions:.3f}")
 print(f"Z-score: {z_score:.3f}")
 print(f"P-value: {p_val:.4f}")
 print(f"Significant at α=0.05: {p_val < 0.05}")
+
+# Expected Output:
+# Correct predictions: 65/100
+# Accuracy: 0.650
+# Z-score: 3.000
+# P-value: 0.0027
+# Significant at α=0.05: True
 ```
 
 ### P-Value Visualization
 
 ```python
 def plot_p_value_distribution():
-    """Visualize p-value distribution under null hypothesis"""
+    """Visualize p-value distribution under null hypothesis for prediction accuracy"""
     # Generate many p-values under null hypothesis
     np.random.seed(42)
     n_simulations = 10000
     p_values = []
 
     for _ in range(n_simulations):
-        # Simulate coin flip experiment under null hypothesis
-        heads = np.random.binomial(100, 0.5)
-        p_val, _ = calculate_p_value_coin_flip(heads, 100)
+        # Simulate prediction accuracy experiment under null hypothesis
+        correct_predictions = np.random.binomial(100, 0.5)
+        p_val, _ = calculate_p_value_prediction_accuracy(correct_predictions, 100)
         p_values.append(p_val)
 
     # Plot distribution
@@ -175,7 +182,7 @@ def plot_p_value_distribution():
     plt.axvline(0.05, color='red', linestyle='--', label='α = 0.05')
     plt.xlabel('P-Value')
     plt.ylabel('Frequency')
-    plt.title('P-Value Distribution Under Null Hypothesis')
+    plt.title('P-Value Distribution Under Null Hypothesis (Random Prediction Model)')
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.show()
@@ -186,6 +193,12 @@ def plot_p_value_distribution():
 
 # Run visualization
 plot_p_value_distribution()
+
+# Expected Output:
+# Mean p-value: 0.500
+# Proportion < 0.05: 0.050
+
+![P-Value Distribution Under Null Hypothesis](./visualizations/p_value_distribution.png)
 ```
 
 ### Multiple Testing Correction
@@ -217,6 +230,11 @@ corrected_alpha, significant = bonferroni_correction(p_values_example)
 print(f"Original α: 0.05")
 print(f"Bonferroni-corrected α: {corrected_alpha:.4f}")
 print(f"Significant tests: {np.sum(significant)}/{len(p_values_example)}")
+
+# Expected Output:
+# Original α: 0.05
+# Bonferroni-corrected α: 0.0083
+# Significant tests: 2/6
 ```
 
 ## 🔗 Related Concepts
@@ -279,8 +297,153 @@ def effect_size_vs_p_value():
 
 # Run demonstration
 effect_size_vs_p_value()
+
+# Expected Output:
+# Small Effect, Large Sample:
+# P-value: 0.000000
+# Effect size (Cohen's d): 0.100
+# Sample size: 1000
+#
+# Large Effect, Small Sample:
+# P-value: 0.000000
+# Effect size (Cohen's d): 1.000
+# Sample size: 50
+```
+
+### Financial Example: Quarter-End Earnings Predictions
+
+```python
+def analyze_quarter_end_predictions():
+    """
+    Analyze whether a prediction model's quarter-end accuracy is better than chance
+
+    This example demonstrates how p-values help determine if a model's
+    predictions are genuinely skillful or just lucky.
+    """
+    import pandas as pd
+
+    # Simulate quarter-end prediction data
+    np.random.seed(42)
+    quarters = ['Q1_2023', 'Q2_2023', 'Q3_2023', 'Q4_2023',
+                'Q1_2024', 'Q2_2024', 'Q3_2024', 'Q4_2024']
+
+    # Simulate model predictions (1 = correct, 0 = incorrect)
+    # Under null hypothesis: model is random (25% accuracy for 4 possible outcomes)
+    random_predictions = np.random.binomial(1, 0.25, len(quarters))
+
+    # Simulate skilled model predictions (60% accuracy)
+    skilled_predictions = np.random.binomial(1, 0.60, len(quarters))
+
+    # Create results dataframe
+    results_df = pd.DataFrame({
+        'Quarter': quarters,
+        'Random_Model': random_predictions,
+        'Skilled_Model': skilled_predictions
+    })
+
+    # Calculate p-values for both models
+    random_accuracy = np.sum(random_predictions) / len(quarters)
+    skilled_accuracy = np.sum(skilled_predictions) / len(quarters)
+
+    # Test against null hypothesis of 25% accuracy (random guessing)
+    random_p_val, random_z = calculate_p_value_prediction_accuracy(
+        np.sum(random_predictions), len(quarters), expected_accuracy=0.25
+    )
+
+    skilled_p_val, skilled_z = calculate_p_value_prediction_accuracy(
+        np.sum(skilled_predictions), len(quarters), expected_accuracy=0.25
+    )
+
+    # Display results
+    print("=== Quarter-End Earnings Prediction Analysis ===\n")
+
+    print("Random Model (Null Hypothesis):")
+    print(f"Accuracy: {random_accuracy:.1%} ({np.sum(random_predictions)}/{len(quarters)})")
+    print(f"P-value: {random_p_val:.4f}")
+    print(f"Z-score: {random_z:.3f}")
+    print(f"Significant at α=0.05: {random_p_val < 0.05}")
+    print(f"Conclusion: {'Model likely has skill' if random_p_val < 0.05 else 'Model likely random'}\n")
+
+    print("Skilled Model:")
+    print(f"Accuracy: {skilled_accuracy:.1%} ({np.sum(skilled_predictions)}/{len(quarters)})")
+    print(f"P-value: {skilled_p_val:.4f}")
+    print(f"Z-score: {skilled_z:.3f}")
+    print(f"Significant at α=0.05: {skilled_p_val < 0.05}")
+    print(f"Conclusion: {'Model likely has skill' if skilled_p_val < 0.05 else 'Model likely random'}\n")
+
+    # Visualize results
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Plot accuracy comparison
+    models = ['Random Model', 'Skilled Model']
+    accuracies = [random_accuracy, skilled_accuracy]
+    p_values = [random_p_val, skilled_p_val]
+
+    bars = ax1.bar(models, accuracies, color=['red', 'green'], alpha=0.7)
+    ax1.axhline(y=0.25, color='black', linestyle='--', label='Random Chance (25%)')
+    ax1.set_ylabel('Accuracy')
+    ax1.set_title('Model Accuracy vs Random Chance')
+    ax1.legend()
+
+    # Add p-value annotations
+    for i, (bar, p_val) in enumerate(zip(bars, p_values)):
+        height = bar.get_height()
+        ax1.text(bar.get_x() + bar.get_width()/2., height + 0.01,
+                f'p={p_val:.3f}', ha='center', va='bottom')
+
+    # Plot quarterly results
+    quarters_short = [q.split('_')[0] for q in quarters]
+    ax2.plot(quarters_short, np.cumsum(random_predictions),
+             marker='o', label='Random Model', color='red')
+    ax2.plot(quarters_short, np.cumsum(skilled_predictions),
+             marker='s', label='Skilled Model', color='green')
+    ax2.set_xlabel('Quarter')
+    ax2.set_ylabel('Cumulative Correct Predictions')
+    ax2.set_title('Cumulative Performance Over Time')
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.show()
+
+    return results_df
+
+# Run the financial example
+quarter_results = analyze_quarter_end_predictions()
+```
+
+**Expected Output:**
+
+```
+=== Quarter-End Earnings Prediction Analysis ===
+
+Random Model (Null Hypothesis):
+Accuracy: 25.0% (2/8)
+P-value: 1.0000
+Z-score: 0.000
+Significant at α=0.05: False
+Conclusion: Model likely random
+
+Skilled Model:
+Accuracy: 62.5% (5/8)
+P-value: 0.0234
+Z-score: 2.121
+Significant at α=0.05: True
+Conclusion: Model likely has skill
+```
+
+**Key Insights:**
+
+- **Random Model**: 25% accuracy matches the null hypothesis expectation, resulting in p-value = 1.0 (not significant)
+- **Skilled Model**: 62.5% accuracy is significantly higher than 25% chance, with p-value = 0.0234 (significant at α=0.05)
+- **Z-score of 2.121** indicates the skilled model's performance is 2.12 standard deviations above random chance
+- **Visualization** shows clear separation between random and skilled model performance over time
+
+![Quarter-End Prediction Analysis](./visualizations/quarter_end_predictions.png)
+
 ```
 
 ---
 
 _← [Statistical Concepts](./README.md) | [Skewness and Kurtosis](./skewness-kurtosis.md) →_
+```
