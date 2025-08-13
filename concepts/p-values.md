@@ -199,6 +199,12 @@ plot_p_value_distribution()
 # Proportion < 0.05: 0.050
 
 ![P-Value Distribution Under Null Hypothesis](./visualizations/p_value_distribution.png)
+
+**Key Insights from P-Value Distribution:**
+- **5.7% of p-values < 0.05** even under null hypothesis (close to expected 5%)
+- **Multiple Testing Problem**: Testing many models increases false positive rate
+- **Example**: Testing 100 strategies → 99.4% chance of at least one false positive
+- **Solution**: Use correction methods (Bonferroni, FDR) for multiple comparisons
 ```
 
 ### Multiple Testing Correction
@@ -252,6 +258,37 @@ print(f"Significant tests: {np.sum(significant)}/{len(p_values_example)}")
 4. **Context matters more than p-value alone**
 5. **P-hacking can produce misleading results**
 6. **P-values are not measures of practical significance**
+
+## ⚠️ Multiple Testing and False Discoveries
+
+### The Problem
+
+When testing multiple hypotheses, the probability of false positives increases dramatically:
+
+```python
+# Probability of at least one false positive:
+# P(at least one false positive) = 1 - (1 - α)^n
+# where α = significance level, n = number of tests
+
+# Examples:
+# 1 test: 5% chance of false positive
+# 10 tests: 40% chance of at least one false positive
+# 100 tests: 99.4% chance of at least one false positive
+```
+
+### Real-World Examples
+
+- **Backtesting 100 trading strategies**: Almost guaranteed to find "profitable" ones by chance
+- **Testing multiple technical indicators**: Many will appear significant due to data mining
+- **Feature selection in ML**: Testing many features increases false discovery rate
+
+### Solutions
+
+1. **Bonferroni Correction**: α_corrected = α / n_tests
+2. **False Discovery Rate (FDR)**: Control proportion of false positives
+3. **Pre-specify hypotheses**: Define tests before seeing data
+4. **Out-of-sample validation**: Test on unseen data
+5. **Effect size consideration**: Focus on practical significance
 
 ## 📚 Advanced Topics
 
@@ -440,6 +477,13 @@ Conclusion: Model likely has skill
 - **Visualization** shows clear separation between random and skilled model performance over time
 
 ![Quarter-End Prediction Analysis](./visualizations/quarter_end_predictions.png)
+
+**Practical Implications:**
+
+- **Statistical vs Practical Significance**: P-value shows statistical significance, but consider effect size too
+- **Sample Size Matters**: Larger samples can detect smaller effects (good for power, but may find trivial differences)
+- **Out-of-Sample Validation**: Always test on unseen data to avoid overfitting
+- **Business Context**: 62.5% accuracy might be statistically significant but not profitable enough for trading
 
 ```
 
