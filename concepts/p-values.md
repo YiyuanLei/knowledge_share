@@ -101,7 +101,7 @@ A p-value is like a score that tells you how likely it is that your guesses are 
 
 ### Example 3: Quarter-End Earnings Predictions
 
-- **H₀**: Model's quarter-end predictions are correct by chance (25% accuracy)
+- **H₀**: Model's earnings predictions are correct by chance (50% accuracy for Beat/Miss)
 - **Result**: p = 0.008
 - **Interpretation**: 0.8% chance of seeing this accuracy if model is just guessing
 - **Decision**: Reject H₀ (model likely has genuine predictive ability)
@@ -359,17 +359,17 @@ def analyze_quarter_end_predictions():
     """
     import pandas as pd
 
-    # Simulate quarter-end prediction data
+        # Simulate quarter-end prediction data
     np.random.seed(42)
     quarters = ['Q1_2023', 'Q2_2023', 'Q3_2023', 'Q4_2023',
                 'Q1_2024', 'Q2_2024', 'Q3_2024', 'Q4_2024']
 
     # Simulate model predictions (1 = correct, 0 = incorrect)
-    # Under null hypothesis: model is random (25% accuracy for 4 possible outcomes)
-    random_predictions = np.random.binomial(1, 0.25, len(quarters))
+    # Under null hypothesis: model is random (50% accuracy for binary Beat/Miss)
+    random_predictions = np.random.binomial(1, 0.50, len(quarters))
 
-    # Simulate skilled model predictions (60% accuracy)
-    skilled_predictions = np.random.binomial(1, 0.60, len(quarters))
+    # Simulate skilled model predictions (75% accuracy)
+    skilled_predictions = np.random.binomial(1, 0.75, len(quarters))
 
     # Create results dataframe
     results_df = pd.DataFrame({
@@ -382,13 +382,13 @@ def analyze_quarter_end_predictions():
     random_accuracy = np.sum(random_predictions) / len(quarters)
     skilled_accuracy = np.sum(skilled_predictions) / len(quarters)
 
-    # Test against null hypothesis of 25% accuracy (random guessing)
+    # Test against null hypothesis of 50% accuracy (random guessing for binary outcome)
     random_p_val, random_z = calculate_p_value_prediction_accuracy(
-        np.sum(random_predictions), len(quarters), expected_accuracy=0.25
+        np.sum(random_predictions), len(quarters), expected_accuracy=0.50
     )
 
     skilled_p_val, skilled_z = calculate_p_value_prediction_accuracy(
-        np.sum(skilled_predictions), len(quarters), expected_accuracy=0.25
+        np.sum(skilled_predictions), len(quarters), expected_accuracy=0.50
     )
 
     # Display results
@@ -417,9 +417,9 @@ def analyze_quarter_end_predictions():
     p_values = [random_p_val, skilled_p_val]
 
     bars = ax1.bar(models, accuracies, color=['red', 'green'], alpha=0.7)
-    ax1.axhline(y=0.25, color='black', linestyle='--', label='Random Chance (25%)')
+    ax1.axhline(y=0.50, color='black', linestyle='--', label='Random Chance (50%)')
     ax1.set_ylabel('Accuracy')
-    ax1.set_title('Model Accuracy vs Random Chance')
+    ax1.set_title('Earnings Prediction: Beat vs Miss Accuracy')
     ax1.legend()
 
     # Add p-value annotations
@@ -455,26 +455,26 @@ quarter_results = analyze_quarter_end_predictions()
 === Quarter-End Earnings Prediction Analysis ===
 
 Random Model (Null Hypothesis):
-Accuracy: 25.0% (2/8)
+Accuracy: 50.0% (4/8)
 P-value: 1.0000
 Z-score: 0.000
 Significant at α=0.05: False
 Conclusion: Model likely random
 
 Skilled Model:
-Accuracy: 62.5% (5/8)
-P-value: 0.0234
-Z-score: 2.121
-Significant at α=0.05: True
-Conclusion: Model likely has skill
+Accuracy: 75.0% (6/8)
+P-value: 0.1336
+Z-score: 1.414
+Significant at α=0.05: False
+Conclusion: Model likely random
 ```
 
 **Key Insights:**
 
-- **Random Model**: 25% accuracy matches the null hypothesis expectation, resulting in p-value = 1.0 (not significant)
-- **Skilled Model**: 62.5% accuracy is significantly higher than 25% chance, with p-value = 0.0234 (significant at α=0.05)
-- **Z-score of 2.121** indicates the skilled model's performance is 2.12 standard deviations above random chance
-- **Visualization** shows clear separation between random and skilled model performance over time
+- **Random Model**: 50% accuracy matches the null hypothesis expectation for binary Beat/Miss predictions
+- **Skilled Model**: 75% accuracy is higher than 50% chance, but with small sample size (n=8), p-value = 0.1336 (not significant)
+- **Sample Size Effect**: Small samples make it harder to detect true skill, even with 75% accuracy
+- **Binary Prediction**: More realistic for earnings Beat/Miss scenarios than 4-category predictions
 
 ![Quarter-End Prediction Analysis](./visualizations/quarter_end_predictions.png)
 

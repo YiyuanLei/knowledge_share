@@ -48,6 +48,7 @@ def plot_p_value_distribution():
 def analyze_quarter_end_predictions():
     """
     Analyze whether a prediction model's quarter-end accuracy is better than chance
+    Binary prediction: Beat vs Miss earnings expectations
     """
     # Simulate quarter-end prediction data
     np.random.seed(42)
@@ -55,11 +56,11 @@ def analyze_quarter_end_predictions():
                 'Q1_2024', 'Q2_2024', 'Q3_2024', 'Q4_2024']
     
     # Simulate model predictions (1 = correct, 0 = incorrect)
-    # Under null hypothesis: model is random (25% accuracy for 4 possible outcomes)
-    random_predictions = np.random.binomial(1, 0.25, len(quarters))
+    # Under null hypothesis: model is random (50% accuracy for binary Beat/Miss)
+    random_predictions = np.random.binomial(1, 0.50, len(quarters))
     
-    # Simulate skilled model predictions (60% accuracy)
-    skilled_predictions = np.random.binomial(1, 0.60, len(quarters))
+    # Simulate skilled model predictions (75% accuracy)
+    skilled_predictions = np.random.binomial(1, 0.75, len(quarters))
     
     # Create results dataframe
     results_df = pd.DataFrame({
@@ -72,13 +73,13 @@ def analyze_quarter_end_predictions():
     random_accuracy = np.sum(random_predictions) / len(quarters)
     skilled_accuracy = np.sum(skilled_predictions) / len(quarters)
     
-    # Test against null hypothesis of 25% accuracy (random guessing)
+    # Test against null hypothesis of 50% accuracy (random guessing for binary outcome)
     random_p_val, random_z = calculate_p_value_prediction_accuracy(
-        np.sum(random_predictions), len(quarters), expected_accuracy=0.25
+        np.sum(random_predictions), len(quarters), expected_accuracy=0.50
     )
     
     skilled_p_val, skilled_z = calculate_p_value_prediction_accuracy(
-        np.sum(skilled_predictions), len(quarters), expected_accuracy=0.25
+        np.sum(skilled_predictions), len(quarters), expected_accuracy=0.50
     )
     
     # Visualize results
@@ -90,27 +91,27 @@ def analyze_quarter_end_predictions():
     p_values = [random_p_val, skilled_p_val]
     
     bars = ax1.bar(models, accuracies, color=['red', 'green'], alpha=0.7)
-    ax1.axhline(y=0.25, color='black', linestyle='--', linewidth=2, label='Random Chance (25%)')
+    ax1.axhline(y=0.50, color='black', linestyle='--', linewidth=2, label='Random Chance (50%)')
     ax1.set_ylabel('Accuracy', fontsize=12)
-    ax1.set_title('Model Accuracy vs Random Chance', fontsize=14)
+    ax1.set_title('Earnings Prediction: Beat vs Miss Accuracy', fontsize=14)
     ax1.legend(fontsize=11)
-    ax1.set_ylim(0, 0.8)
+    ax1.set_ylim(0, 1.0)
     
     # Add p-value annotations
     for i, (bar, p_val) in enumerate(zip(bars, p_values)):
         height = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2., height + 0.01,
+        ax1.text(bar.get_x() + bar.get_width()/2., height + 0.02,
                 f'p={p_val:.3f}', ha='center', va='bottom', fontweight='bold')
     
     # Plot quarterly results
-    quarters_short = [q.split('_')[0] for q in quarters]
+    quarters_short = [q.replace('_', '-').replace('20', '') for q in quarters]  # Q1-23, Q2-23, etc.
     ax2.plot(quarters_short, np.cumsum(random_predictions), 
              marker='o', label='Random Model', color='red', linewidth=2, markersize=8)
     ax2.plot(quarters_short, np.cumsum(skilled_predictions), 
              marker='s', label='Skilled Model', color='green', linewidth=2, markersize=8)
     ax2.set_xlabel('Quarter', fontsize=12)
     ax2.set_ylabel('Cumulative Correct Predictions', fontsize=12)
-    ax2.set_title('Cumulative Performance Over Time', fontsize=14)
+    ax2.set_title('Cumulative Beat/Miss Predictions Over Time', fontsize=14)
     ax2.legend(fontsize=11)
     ax2.grid(True, alpha=0.3)
     
