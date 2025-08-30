@@ -198,7 +198,7 @@ plot_p_value_distribution()
 # Mean p-value: 0.500
 # Proportion < 0.05: 0.050
 
-![P-Value Distribution Under Null Hypothesis](./visualizations/p_value_distribution.png)
+![P-Value Distribution Under Null Hypothesis](../visualizations/p_value_distribution.png)
 
 **Key Insights from P-Value Distribution:**
 - **5.7% of p-values < 0.05** even under null hypothesis (close to expected 5%)
@@ -476,7 +476,7 @@ Conclusion: Model likely random
 - **Sample Size Effect**: Small samples make it harder to detect true skill, even with 75% accuracy
 - **Binary Prediction**: More realistic for earnings Beat/Miss scenarios than 4-category predictions
 
-![Quarter-End Prediction Analysis](./visualizations/quarter_end_predictions.png)
+![Quarter-End Prediction Analysis](../visualizations/quarter_end_predictions.png)
 
 **Practical Implications:**
 
