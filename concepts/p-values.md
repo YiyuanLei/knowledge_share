@@ -198,7 +198,7 @@ plot_p_value_distribution()
 # Mean p-value: 0.500
 # Proportion < 0.05: 0.050
 
-![P-Value Distribution Under Null Hypothesis](../visualizations/p_value_distribution.png)
+![P-Value Distribution Under Null Hypothesis](/knowledge_share/visualizations/p_value_distribution.png)
 
 **Key Insights from P-Value Distribution:**
 - **5.7% of p-values < 0.05** even under null hypothesis (close to expected 5%)
@@ -428,15 +428,15 @@ def analyze_quarter_end_predictions():
         ax1.text(bar.get_x() + bar.get_width()/2., height + 0.01,
                 f'p={p_val:.3f}', ha='center', va='bottom')
 
-    # Plot quarterly results
-    quarters_short = [q.split('_')[0] for q in quarters]
+        # Plot quarterly results
+    quarters_short = [q.replace('_', '-').replace('20', '') for q in quarters]  # Q1-23, Q2-23, etc.
     ax2.plot(quarters_short, np.cumsum(random_predictions),
              marker='o', label='Random Model', color='red')
     ax2.plot(quarters_short, np.cumsum(skilled_predictions),
              marker='s', label='Skilled Model', color='green')
     ax2.set_xlabel('Quarter')
     ax2.set_ylabel('Cumulative Correct Predictions')
-    ax2.set_title('Cumulative Performance Over Time')
+    ax2.set_title('Cumulative Beat/Miss Predictions Over Time')
     ax2.legend()
     ax2.grid(True, alpha=0.3)
 
@@ -476,7 +476,7 @@ Conclusion: Model likely random
 - **Sample Size Effect**: Small samples make it harder to detect true skill, even with 75% accuracy
 - **Binary Prediction**: More realistic for earnings Beat/Miss scenarios than 4-category predictions
 
-![Quarter-End Prediction Analysis](../visualizations/quarter_end_predictions.png)
+![Quarter-End Prediction Analysis](/knowledge_share/visualizations/quarter_end_predictions.png)
 
 **Practical Implications:**
 
