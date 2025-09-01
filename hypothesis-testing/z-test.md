@@ -34,7 +34,13 @@ $$\text{Var}(\bar{X}) = \frac{\sigma^2}{n}$$
 - **Larger samples**: More cancellation → less variability
 - **Result**: Sample mean is more precise than individual observations
 
-**Analogy**: Like taking multiple photos and averaging them to reduce noise!
+**Analogy**: Mutual Fund vs. Single Stock
+
+Single stock: Imagine you put all your money into just one company’s stock. If that company does great, you gain a lot. If it tanks, you lose badly. The outcomes swing widely → high variance.
+
+Mutual fund (average of many stocks): Now instead, you buy a mutual fund with 100 different companies. Each company's stock bounces up and down, but not all at the same time. Some rise while others fall. When you average across them, the ups and downs partially cancel out, so the fund's value moves more smoothly → lower variance.
+
+**Key Insight**: This is exactly what happens with sample means! Individual observations have high variance (like single stocks), but averaging across many observations (like a mutual fund) reduces the overall variability.
 
 #### 📐 Mathematical Derivation
 
@@ -66,19 +72,126 @@ $$\text{Var}(X + Y) = \text{Var}(X) + \text{Var}(Y) + 2\text{Cov}(X, Y)$$
 **Therefore**: $\text{Var}(X + Y) = \text{Var}(X) + \text{Var}(Y)$
 
 **Definition of Independent Random Variables**:
-Two random variables X and Y are independent if:
-$$P(X = x \text{ and } Y = y) = P(X = x) \cdot P(Y = y)$$
+Two random variables X and Y are independent if they satisfy **both** equivalent conditions:
 
+**1. Probability Format (Joint Events)**:
+$$P(X = x \text{ and } Y = y) = P(X = x) \cdot P(Y = y)$$
 for all possible values of x and y.
+
+**2. Expectation Format (Multiplicative Property)**:
+$$E[XY] = E[X] \cdot E[Y]$$
+
+**Why These Are Equivalent**:
+
+- **Probability format**: Joint probability factorizes into marginal probabilities
+- **Expectation format**: Expected value of product equals product of expected values
+- **Both express**: No relationship between X and Y
 
 **Key Implication**: Knowledge about X provides no information about Y
 
 **Covariance of Independent Variables**:
 $$\text{Cov}(X, Y) = E[XY] - E[X]E[Y] = E[X]E[Y] - E[X]E[Y] = 0$$
 
+**This derivation uses the expectation format**: Since $E[XY] = E[X]E[Y]$ for independent variables, covariance becomes zero.
+
+#### 📊 Binomial to Normal Approximation: Historical Context
+
+**De Moivre-Laplace Theorem (1733)**:
+The first formal statement of CLT for binomial distributions.
+
+**Statement**: If X ~ Binomial(n, p) with np → ∞ and n(1-p) → ∞, then:
+$$\frac{X - np}{\sqrt{np(1-p)}} \xrightarrow{d} N(0, 1)$$
+
+**Practical Implication**: This theorem justifies using normal approximation for proportions when sample sizes are large.
+
+**Modern Refinements**:
+
+- **Berry-Esseen Theorem**: Provides bounds on approximation error
+- **Error bound**: $|P(Z \leq z) - \Phi(z)| \leq \frac{C}{\sqrt{n}}$ where C ≈ 0.4
+- **Rate of convergence**: Error decreases as 1/√n
+
 **This is why variances add for independent samples!**
 
+#### 🎯 Fundamental Theorems Supporting Z-Tests
+
+**1. Central Limit Theorem (CLT)**
+
+**Intuitive**: For large samples, sample means approach normal distribution regardless of population shape
+
+**Mathematical Statement**:
+Let $X_1, X_2, \ldots, X_n$ be independent random variables with $E[X_i] = \mu$ and $\text{Var}(X_i) = \sigma^2$. Then:
+
+$$\frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} N(0, 1) \text{ as } n \to \infty$$
+
+**Why CLT Matters for Z-Tests**:
+
+- **Small samples**: Need population normality assumption
+- **Large samples (n ≥ 30)**: CLT ensures sample mean is approximately normal
+- **Robustness**: Z-test works even with non-normal populations if n is large
+
+**2. Linear Transformation Property of Normal Distributions**
+
+**Theorem**: If $X \sim N(\mu, \sigma^2)$, then $aX + b \sim N(a\mu + b, a^2\sigma^2)$
+
+**Proof Sketch**:
+
+- **Moment generating function**: $M_{aX+b}(t) = e^{bt}M_X(at)$
+- **For normal X**: $M_X(t) = e^{\mu t + \frac{\sigma^2 t^2}{2}}$
+- **Result**: $M_{aX+b}(t) = e^{(a\mu + b)t + \frac{a^2\sigma^2 t^2}{2}}$
+- **Conclusion**: This is MGF of $N(a\mu + b, a^2\sigma^2)$
+
+**Application to Standardization**:
+$$Z = \frac{X - \mu}{\sigma} = \frac{1}{\sigma}X - \frac{\mu}{\sigma}$$
+
+With $a = 1/\sigma$, $b = -\mu/\sigma$:
+$$Z \sim N\left(\frac{1}{\sigma} \cdot \mu - \frac{\mu}{\sigma}, \frac{1}{\sigma^2} \cdot \sigma^2\right) = N(0, 1)$$
+
+**3. Independence and Normal Distributions**
+
+**Theorem**: If $X \sim N(\mu_X, \sigma_X^2)$ and $Y \sim N(\mu_Y, \sigma_Y^2)$ are independent, then:
+$$X + Y \sim N(\mu_X + \mu_Y, \sigma_X^2 + \sigma_Y^2)$$
+$$X - Y \sim N(\mu_X - \mu_Y, \sigma_X^2 + \sigma_Y^2)$$
+
+**Key Insight**: **Addition OR subtraction** of independent normal variables is normal
+
+**Why Variance Adds (Not Subtracts)**:
+$$\text{Var}(X - Y) = \text{Var}(X) + \text{Var}(-Y) = \text{Var}(X) + \text{Var}(Y)$$
+
+Because $\text{Var}(-Y) = (-1)^2 \text{Var}(Y) = \text{Var}(Y)$
+
 ### One-Sample Z-Test
+
+#### 🔍 Underlying Assumptions for Z-Score Application
+
+**Critical Assumptions:**
+
+1. **Population is normally distributed** OR **large sample size (n ≥ 30)**
+2. **Population standard deviation (σ) is known**
+3. **Observations are independent**
+4. **Random sampling from population**
+
+#### 🎯 Why Z-Score Works: Mathematical Foundation
+
+**Intuitive Explanation:**
+
+- **Sample mean (X̄)** follows a normal distribution
+- **Standardization** converts any normal distribution to standard normal (Z)
+- **Z-score** measures "how many standard errors away from the mean"
+
+**Mathematical Proof:**
+
+**Given**: $X_1, X_2, \ldots, X_n \sim N(\mu, \sigma^2)$ (independent)
+
+**Step 1**: Sample mean distribution
+$$\bar{X} = \frac{1}{n}\sum_{i=1}^{n} X_i \sim N\left(\mu, \frac{\sigma^2}{n}\right)$$
+
+**Step 2**: Standardization transformation
+$$Z = \frac{\bar{X} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1)$$
+
+**Step 3**: Under null hypothesis ($\mu = \mu_0$)
+$$Z = \frac{\bar{X} - \mu_0}{\sigma/\sqrt{n}} \sim N(0, 1)$$
+
+**Key Insight**: Linear transformation of normal random variable remains normal!
 
 **Hypotheses:**
 
@@ -99,6 +212,53 @@ Where:
 - n = sample size
 
 ### Two-Sample Z-Test
+
+#### 🔍 Underlying Assumptions for Two-Sample Z-Score
+
+**Critical Assumptions:**
+
+1. **Both populations are normally distributed** OR **large sample sizes (n₁, n₂ ≥ 30)**
+2. **Population standard deviations (σ₁, σ₂) are known**
+3. **Samples are independent** (within and between groups)
+4. **Random sampling from respective populations**
+
+#### 🎯 Why Difference of Means is Normal: Mathematical Proof
+
+**Intuitive Explanation:**
+
+- **Each sample mean** is normally distributed
+- **Difference of normal variables** is also normal
+- **Linear combinations** preserve normality
+
+**Mathematical Proof:**
+
+**Given**:
+
+- $X_1, X_2, \ldots, X_{n_1} \sim N(\mu_1, \sigma_1^2)$ (independent)
+- $Y_1, Y_2, \ldots, Y_{n_2} \sim N(\mu_2, \sigma_2^2)$ (independent)
+- Samples are independent between groups
+
+**Step 1**: Individual sample mean distributions
+$$\bar{X} \sim N\left(\mu_1, \frac{\sigma_1^2}{n_1}\right)$$
+$$\bar{Y} \sim N\left(\mu_2, \frac{\sigma_2^2}{n_2}\right)$$
+
+**Step 2**: **Key Theorem** - Linear combination of independent normal variables
+
+**Theorem**: If $U \sim N(\mu_U, \sigma_U^2)$ and $V \sim N(\mu_V, \sigma_V^2)$ are independent, then:
+$$aU + bV \sim N(a\mu_U + b\mu_V, a^2\sigma_U^2 + b^2\sigma_V^2)$$
+
+**Step 3**: Apply theorem to difference ($a = 1, b = -1$)
+$$\bar{X} - \bar{Y} \sim N\left(\mu_1 - \mu_2, \frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}\right)$$
+
+**Step 4**: Standardization under null hypothesis ($\mu_1 = \mu_2$)
+$$Z = \frac{(\bar{X} - \bar{Y}) - 0}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} \sim N(0, 1)$$
+
+**Why This Works**:
+
+1. **Normality preservation**: Linear combinations of normal variables remain normal
+2. **Independence**: Allows variance addition (no covariance term)
+3. **Known parameters**: No estimation uncertainty in denominator
+4. **CLT backup**: Even if populations aren't normal, large samples ensure approximate normality
 
 **Hypotheses:**
 
@@ -146,6 +306,53 @@ Where:
 
 ### One-Sample Z-Test for Proportions
 
+#### 🔍 Underlying Assumptions for Proportional Z-Score
+
+**Critical Assumptions:**
+
+1. **Large sample size**: np₀ ≥ 5 AND n(1-p₀) ≥ 5
+2. **Independent trials** (each observation independent)
+3. **Constant probability** p across all trials
+4. **Random sampling** from population
+5. **Binary outcomes** (success/failure only)
+
+#### 🎯 Why Proportions Follow Normal Distribution: Mathematical Foundation
+
+**Intuitive Explanation:**
+
+- **Sample proportion p̂** is average of many 0s and 1s
+- **Central Limit Theorem** applies to averages
+- **Large samples** make binomial → normal approximation excellent
+- **Standardization** converts to standard normal
+
+**Mathematical Proof:**
+
+**Given**: X₁, X₂, ..., Xₙ are independent Bernoulli trials with P(Xᵢ = 1) = p
+
+**Step 1**: Sample proportion as sum
+$$\hat{p} = \frac{1}{n}\sum_{i=1}^{n} X_i = \frac{X}{n}$$
+where X = ∑Xᵢ ~ Binomial(n, p)
+
+**Step 2**: Binomial distribution properties
+$$E[X] = np, \quad \text{Var}(X) = np(1-p)$$
+
+**Step 3**: Sample proportion distribution
+$$E[\hat{p}] = E\left[\frac{X}{n}\right] = \frac{E[X]}{n} = \frac{np}{n} = p$$
+$$\text{Var}(\hat{p}) = \text{Var}\left(\frac{X}{n}\right) = \frac{\text{Var}(X)}{n^2} = \frac{np(1-p)}{n^2} = \frac{p(1-p)}{n}$$
+
+**Step 4**: Normal approximation via CLT
+For large n, by Central Limit Theorem:
+$$\hat{p} \sim N\left(p, \frac{p(1-p)}{n}\right)$$
+
+**Step 5**: Standardization under null hypothesis (p = p₀)
+$$Z = \frac{\hat{p} - p_0}{\sqrt{\frac{p_0(1-p_0)}{n}}} \sim N(0, 1)$$
+
+**Why Sample Size Conditions Matter:**
+
+- **np₀ ≥ 5**: Ensures enough "successes" for normal approximation
+- **n(1-p₀) ≥ 5**: Ensures enough "failures" for normal approximation
+- **Both needed**: Binomial is most skewed when p near 0 or 1
+
 **Hypotheses:**
 
 - **H₀**: p = p₀ (population proportion equals hypothesized value)
@@ -166,6 +373,72 @@ Where:
 
 ### Two-Sample Z-Test for Proportions
 
+#### 🔍 Underlying Assumptions for Two-Sample Proportional Z-Score
+
+**Critical Assumptions:**
+
+1. **Large sample sizes**: n₁p̂₁ ≥ 5, n₁(1-p̂₁) ≥ 5, n₂p̂₂ ≥ 5, n₂(1-p̂₂) ≥ 5
+2. **Independent samples** (within and between groups)
+3. **Independent trials** within each sample
+4. **Random sampling** from respective populations
+5. **Binary outcomes** in both groups
+
+#### 🎯 Why Difference of Proportions is Normal: Mathematical Proof
+
+**Intuitive Explanation:**
+
+- **Each sample proportion** is approximately normal (by CLT)
+- **Difference of normal variables** is also normal
+- **Independence** allows variance addition
+- **Pooled estimate** provides best variance estimate under H₀
+
+**Mathematical Proof:**
+
+**Given**:
+
+- Group 1: X₁ ~ Binomial(n₁, p₁), so p̂₁ = X₁/n₁
+- Group 2: X₂ ~ Binomial(n₂, p₂), so p̂₂ = X₂/n₂
+- Samples are independent
+
+**Step 1**: Individual sample proportion distributions (by CLT)
+$$\hat{p}_1 \sim N\left(p_1, \frac{p_1(1-p_1)}{n_1}\right)$$
+$$\hat{p}_2 \sim N\left(p_2, \frac{p_2(1-p_2)}{n_2}\right)$$
+
+**Step 2**: Difference of proportions distribution
+Using the theorem for linear combinations of independent normal variables:
+$$\hat{p}_1 - \hat{p}_2 \sim N\left(p_1 - p_2, \frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}\right)$$
+
+**Step 3**: Under null hypothesis (p₁ = p₂ = p)
+$$\hat{p}_1 - \hat{p}_2 \sim N\left(0, \frac{p(1-p)}{n_1} + \frac{p(1-p)}{n_2}\right)$$
+$$= N\left(0, p(1-p)\left(\frac{1}{n_1} + \frac{1}{n_2}\right)\right)$$
+
+**Step 4**: Pooled proportion estimate
+Since p is unknown under H₀, we estimate it using pooled data:
+$$\hat{p}_{\text{pooled}} = \frac{x_1 + x_2}{n_1 + n_2}$$
+
+**Why Pooled Proportion?**
+
+- **Under H₀**: Both groups have same true proportion p
+- **Best estimate**: Combine all data for maximum precision
+- **Maximum likelihood**: Pooled estimate is MLE under H₀
+- **Variance estimation**: Provides single estimate of common variance
+
+**Step 5**: Final standardization
+$$Z = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\hat{p}(1-\hat{p})\left(\frac{1}{n_1} + \frac{1}{n_2}\right)}} \sim N(0, 1)$$
+
+**Mathematical Justification for Pooling:**
+
+**Theorem**: Under H₀: p₁ = p₂ = p, the pooled estimator
+$$\hat{p} = \frac{X_1 + X_2}{n_1 + n_2}$$
+is the maximum likelihood estimator of the common proportion p.
+
+**Proof**:
+
+- **Likelihood**: $L(p) = \binom{n_1}{x_1}\binom{n_2}{x_2}p^{x_1+x_2}(1-p)^{n_1+n_2-x_1-x_2}$
+- **Log-likelihood**: $\ell(p) = C + (x_1+x_2)\ln(p) + (n_1+n_2-x_1-x_2)\ln(1-p)$
+- **First derivative**: $\frac{d\ell}{dp} = \frac{x_1+x_2}{p} - \frac{n_1+n_2-x_1-x_2}{1-p}$
+- **Set to zero**: $\hat{p} = \frac{x_1+x_2}{n_1+n_2}$
+
 **Hypotheses:**
 
 - **H₀**: p₁ = p₂ (no difference in population proportions)
@@ -181,12 +454,56 @@ Where:
 
 - p̂₁ = x₁/n₁ = sample proportion from group 1
 - p̂₂ = x₂/n₂ = sample proportion from group 2
-- p̂ = (x₁ + x₂)/(n₁ + n₂) = pooled proportion (under H₀: p₁ = p₂)
+- p̂ = (x₁ + x₂)/(n₁ + n₂) = pooled proportion (MLE under H₀)
 - x₁, x₂ = number of successes in each group
 - n₁, n₂ = sample sizes
 
-**Why Pooled Proportion?**
-Under H₀, both groups have same proportion, so we pool data for best estimate.
+#### 📊 Additional Considerations for Proportional Z-Tests
+
+**1. Continuity Correction (Yates' Correction)**
+
+**When to Use**: For better approximation when sample sizes are moderate
+
+**Intuitive Explanation**:
+
+- **Binomial is discrete**, normal is continuous
+- **Continuity correction** bridges this gap
+- **Adjustment**: ±0.5 to the numerator before standardizing
+
+**Mathematical Justification**:
+For discrete X ~ Binomial(n, p), we approximate:
+$$P(X = k) \approx P(k - 0.5 < Y < k + 0.5)$$
+where Y ~ Normal(np, np(1-p))
+
+**Corrected Test Statistic** (one-sample):
+$$Z = \frac{|\hat{p} - p_0| - \frac{1}{2n}}{\sqrt{\frac{p_0(1-p_0)}{n}}}$$
+
+**2. When Normal Approximation Fails**
+
+**Problematic Scenarios**:
+
+- **Small samples**: n < 30 and np < 5 or n(1-p) < 5
+- **Extreme proportions**: p very close to 0 or 1
+- **Severe skewness**: Binomial becomes highly skewed
+
+**Alternative Methods**:
+
+- **Exact binomial test**: For small samples
+- **Fisher's exact test**: For 2x2 contingency tables
+- **Bootstrap methods**: For non-parametric inference
+
+**3. Sample Size Determination**
+
+**Rule of Thumb**: For normal approximation to work well:
+$$n \geq \max\left(\frac{9}{p}, \frac{9}{1-p}\right)$$
+
+**Conservative Approach**: np ≥ 10 and n(1-p) ≥ 10
+
+**Why These Rules?**
+
+- **Ensures symmetry**: Binomial becomes approximately symmetric
+- **Reduces skewness**: Makes normal approximation more accurate
+- **Controls tail behavior**: Ensures good approximation in critical regions
 
 ## 🔍 Decision Making
 
@@ -367,6 +684,7 @@ hypothesized_rate = 0.05
 3. **Large samples**: Z and t converge, but t is still more conservative
 4. **Financial markets**: Established instruments → Z-test; New products → t-test
 5. **Risk management**: Known volatility models → Z-test; Estimated parameters → t-test
+6. **Proportional tests**: Large samples with moderate proportions → Z-test; Small samples or extreme proportions → Exact tests
 
 ---
 
