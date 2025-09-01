@@ -353,6 +353,27 @@ $$Z = \frac{\hat{p} - p_0}{\sqrt{\frac{p_0(1-p_0)}{n}}} \sim N(0, 1)$$
 - **n(1-p₀) ≥ 5**: Ensures enough "failures" for normal approximation
 - **Both needed**: Binomial is most skewed when p near 0 or 1
 
+#### 🔬 Bernoulli Trials and Binomial Distribution Foundation
+
+**Bernoulli Trial Properties:**
+- **Single trial**: Xᵢ ~ Bernoulli(p) with P(Xᵢ = 1) = p, P(Xᵢ = 0) = 1-p
+- **Expectation**: E[Xᵢ] = p
+- **Variance**: Var(Xᵢ) = p(1-p)
+- **Independence**: Xᵢ ⊥ Xⱼ for i ≠ j
+
+**Binomial Distribution Properties:**
+- **Sum of n independent Bernoulli trials**: X = ∑Xᵢ ~ Binomial(n, p)
+- **Probability mass function**: P(X = k) = $\binom{n}{k}p^k(1-p)^{n-k}$
+- **Expectation**: E[X] = np
+- **Variance**: Var(X) = np(1-p)
+
+**Connection to Sample Proportion:**
+$$\hat{p} = \frac{X}{n} = \frac{1}{n}\sum_{i=1}^{n} X_i$$
+
+**Linear Transformation Properties:**
+- **Expectation**: E[â] = E[X/n] = E[X]/n = np/n = p
+- **Variance**: Var(â) = Var(X/n) = Var(X)/n² = np(1-p)/n² = p(1-p)/n
+
 **Hypotheses:**
 
 - **H₀**: p = p₀ (population proportion equals hypothesized value)
@@ -408,6 +429,13 @@ $$\hat{p}_2 \sim N\left(p_2, \frac{p_2(1-p_2)}{n_2}\right)$$
 Using the theorem for linear combinations of independent normal variables:
 $$\hat{p}_1 - \hat{p}_2 \sim N\left(p_1 - p_2, \frac{p_1(1-p_1)}{n_1} + \frac{p_2(1-p_2)}{n_2}\right)$$
 
+**Mathematical Justification for Variance Addition:**
+Since p̂₁ and p̂₂ are independent normal variables:
+$$\text{Var}(\hat{p}_1 - \hat{p}_2) = \text{Var}(\hat{p}_1) + \text{Var}(\hat{p}_2) - 2\text{Cov}(\hat{p}_1, \hat{p}_2)$$
+
+**Independence implies zero covariance**: Cov(p̂₁, p̂₂) = 0
+Therefore: Var(p̂₁ - p̂₂) = Var(p̂₁) + Var(p̂₂)
+
 **Step 3**: Under null hypothesis (p₁ = p₂ = p)
 $$\hat{p}_1 - \hat{p}_2 \sim N\left(0, \frac{p(1-p)}{n_1} + \frac{p(1-p)}{n_2}\right)$$
 $$= N\left(0, p(1-p)\left(\frac{1}{n_1} + \frac{1}{n_2}\right)\right)$$
@@ -438,6 +466,21 @@ is the maximum likelihood estimator of the common proportion p.
 - **Log-likelihood**: $\ell(p) = C + (x_1+x_2)\ln(p) + (n_1+n_2-x_1-x_2)\ln(1-p)$
 - **First derivative**: $\frac{d\ell}{dp} = \frac{x_1+x_2}{p} - \frac{n_1+n_2-x_1-x_2}{1-p}$
 - **Set to zero**: $\hat{p} = \frac{x_1+x_2}{n_1+n_2}$
+
+#### 🎯 Theoretical Properties of Pooled Estimator
+
+**Unbiasedness**: Under H₀, E[â] = p
+**Efficiency**: Pooled estimator has minimum variance among all unbiased estimators
+**Consistency**: â → p as n₁, n₂ → ∞
+
+**Variance of Pooled Estimator**:
+$$\text{Var}(\hat{p}) = \text{Var}\left(\frac{X_1 + X_2}{n_1 + n_2}\right) = \frac{\text{Var}(X_1 + X_2)}{(n_1 + n_2)^2}$$
+
+Since X₁ and X₂ are independent:
+$$\text{Var}(X_1 + X_2) = \text{Var}(X_1) + \text{Var}(X_2) = n_1p(1-p) + n_2p(1-p) = (n_1 + n_2)p(1-p)$$
+
+Therefore:
+$$\text{Var}(\hat{p}) = \frac{(n_1 + n_2)p(1-p)}{(n_1 + n_2)^2} = \frac{p(1-p)}{n_1 + n_2}$$
 
 **Hypotheses:**
 
@@ -504,6 +547,25 @@ $$n \geq \max\left(\frac{9}{p}, \frac{9}{1-p}\right)$$
 - **Ensures symmetry**: Binomial becomes approximately symmetric
 - **Reduces skewness**: Makes normal approximation more accurate
 - **Controls tail behavior**: Ensures good approximation in critical regions
+
+#### 📊 Central Limit Theorem for Proportions
+
+**De Moivre-Laplace Theorem (Special Case of CLT)**:
+For X ~ Binomial(n, p) with np → ∞ and n(1-p) → ∞:
+$$\frac{X - np}{\sqrt{np(1-p)}} \xrightarrow{d} N(0, 1)$$
+
+**For Sample Proportions**:
+$$\frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \xrightarrow{d} N(0, 1)$$
+
+**Rate of Convergence**:
+- **Berry-Esseen bound**: $|P(Z \leq z) - \Phi(z)| \leq \frac{C}{\sqrt{n}}$ where C ≈ 0.4
+- **Convergence speed**: Error decreases as 1/√n
+- **Practical implication**: n ≥ 30 usually sufficient for good approximation
+
+**When CLT Fails for Proportions**:
+- **Extreme p values**: p very close to 0 or 1
+- **Small samples**: np < 5 or n(1-p) < 5
+- **Skewed distributions**: Binomial becomes highly asymmetric
 
 ## 🔍 Decision Making
 
