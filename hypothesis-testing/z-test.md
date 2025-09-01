@@ -356,12 +356,14 @@ $$Z = \frac{\hat{p} - p_0}{\sqrt{\frac{p_0(1-p_0)}{n}}} \sim N(0, 1)$$
 #### 🔬 Bernoulli Trials and Binomial Distribution Foundation
 
 **Bernoulli Trial Properties:**
+
 - **Single trial**: Xᵢ ~ Bernoulli(p) with P(Xᵢ = 1) = p, P(Xᵢ = 0) = 1-p
 - **Expectation**: E[Xᵢ] = p
 - **Variance**: Var(Xᵢ) = p(1-p)
 - **Independence**: Xᵢ ⊥ Xⱼ for i ≠ j
 
 **Binomial Distribution Properties:**
+
 - **Sum of n independent Bernoulli trials**: X = ∑Xᵢ ~ Binomial(n, p)
 - **Probability mass function**: P(X = k) = $\binom{n}{k}p^k(1-p)^{n-k}$
 - **Expectation**: E[X] = np
@@ -371,6 +373,7 @@ $$Z = \frac{\hat{p} - p_0}{\sqrt{\frac{p_0(1-p_0)}{n}}} \sim N(0, 1)$$
 $$\hat{p} = \frac{X}{n} = \frac{1}{n}\sum_{i=1}^{n} X_i$$
 
 **Linear Transformation Properties:**
+
 - **Expectation**: E[â] = E[X/n] = E[X]/n = np/n = p
 - **Variance**: Var(â) = Var(X/n) = Var(X)/n² = np(1-p)/n² = p(1-p)/n
 
@@ -551,21 +554,47 @@ $$n \geq \max\left(\frac{9}{p}, \frac{9}{1-p}\right)$$
 #### 📊 Central Limit Theorem for Proportions
 
 **De Moivre-Laplace Theorem (Special Case of CLT)**:
-For X ~ Binomial(n, p) with np → ∞ and n(1-p) → ∞:
+For X ~ Binomial(n, p) with n → ∞, np → ∞, and n(1-p) → ∞:
 $$\frac{X - np}{\sqrt{np(1-p)}} \xrightarrow{d} N(0, 1)$$
 
 **For Sample Proportions**:
 $$\frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \xrightarrow{d} N(0, 1)$$
 
 **Rate of Convergence**:
+
 - **Berry-Esseen bound**: $|P(Z \leq z) - \Phi(z)| \leq \frac{C}{\sqrt{n}}$ where C ≈ 0.4
 - **Convergence speed**: Error decreases as 1/√n
 - **Practical implication**: n ≥ 30 usually sufficient for good approximation
 
+**Why All Three Conditions Are Necessary**:
+
+1. **n → ∞**: Ensures the basic CLT condition (sample size goes to infinity)
+2. **np → ∞**: Ensures enough "successes" for normal approximation
+3. **n(1-p) → ∞**: Ensures enough "failures" for normal approximation
+
+**Mathematical Intuition**:
+
+- **If p → 0 as n → ∞**: Then np might stay small, making the distribution too skewed
+- **If p → 1 as n → ∞**: Then n(1-p) might stay small, also causing skewness
+- **Both conditions needed**: To ensure the binomial distribution becomes approximately symmetric
+
 **When CLT Fails for Proportions**:
+
 - **Extreme p values**: p very close to 0 or 1
 - **Small samples**: np < 5 or n(1-p) < 5
 - **Skewed distributions**: Binomial becomes highly asymmetric
+
+**Practical Example**:
+
+- **Case 1**: n = 1000, p = 0.001 → np = 1, n(1-p) = 999
+  - **Problem**: np = 1 is too small (not enough successes)
+  - **Result**: Distribution is highly skewed, normal approximation poor
+- **Case 2**: n = 1000, p = 0.999 → np = 999, n(1-p) = 1
+  - **Problem**: n(1-p) = 1 is too small (not enough failures)
+  - **Result**: Distribution is highly skewed, normal approximation poor
+- **Case 3**: n = 1000, p = 0.5 → np = 500, n(1-p) = 500
+  - **Good**: Both conditions satisfied
+  - **Result**: Distribution is approximately symmetric, normal approximation excellent
 
 ## 🔍 Decision Making
 
