@@ -57,6 +57,10 @@ A comprehensive collection of statistical concepts, hypothesis testing methods, 
 - [Options Pricing](./finance/options-pricing.md) - Black-Scholes, Greeks
 - [ESG Analysis](./finance/esg-analysis.md) - Environmental, Social, Governance metrics
 
+### [Featured Research Paper](./paper-reading-notes/machine-learning/attention-is-all-you-need-step2.md)
+
+- **[Attention Is All You Need - Mathematical Analysis (Steps 1-2)](./paper-reading-notes/machine-learning/attention-is-all-you-need-step2.md)** - Comprehensive mathematical analysis of the Transformer architecture with financial domain examples
+
 ### [Paper Reading Notes](./paper-reading-notes/)
 
 - [Overview](./paper-reading-notes/README.md) - Research paper summaries and insights
