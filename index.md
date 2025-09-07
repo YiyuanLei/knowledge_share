@@ -57,6 +57,22 @@ A comprehensive collection of statistical concepts, hypothesis testing methods, 
 - [Options Pricing](./finance/options-pricing.md) - Black-Scholes, Greeks
 - [ESG Analysis](./finance/esg-analysis.md) - Environmental, Social, Governance metrics
 
+### [Paper Reading Notes](./paper-reading-notes/)
+
+- [Overview](./paper-reading-notes/README.md) - Research paper summaries and insights
+- [Statistical Methods](./paper-reading-notes/statistical-methods/) - Statistical theory and applications
+- [Machine Learning](./paper-reading-notes/machine-learning/) - ML algorithms and AI research
+- [Quantitative Finance](./paper-reading-notes/quantitative-finance/) - Financial modeling and risk management
+- [Causal Inference](./paper-reading-notes/causal-inference/) - RCT, observational studies, and causal methods
+
+### [Experimentations](./experimentations/)
+
+- [Overview](./experimentations/README.md) - Hands-on experiments and practical explorations
+- [Statistical Experiments](./experimentations/statistical-experiments/) - Hypothesis testing and statistical inference
+- [ML Experiments](./experimentations/ml-experiments/) - Algorithm comparisons and model evaluation
+- [Financial Experiments](./experimentations/financial-experiments/) - Portfolio optimization and trading strategies
+- [Simulation Studies](./experimentations/simulation-studies/) - Monte Carlo methods and synthetic data
+
 ## 🎯 Quick Reference
 
 ### When to Use Which Test?
