@@ -23,7 +23,6 @@ exclude:
   - .github
   - .gitignore
   - README.md
-  - paper-reading-notes/machine-learning/attention-is-all-you-need-step2.md
   - paper-reading-notes/machine-learning/attention-is-all-you-need.md
   - paper-reading-notes/machine-learning/gpt-3-in-context-learning.md
   - paper-reading-notes/machine-learning/tabpfn-learning-path.md
