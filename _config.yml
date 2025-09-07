@@ -23,3 +23,5 @@ exclude:
   - .github
   - .gitignore
   - README.md
+  - paper-reading-notes
+  - experimentations
