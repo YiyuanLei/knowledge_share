@@ -1,3 +1,8 @@
+---
+layout: default
+title: Attention Is All You Need - Mathematical Analysis (Steps 1-2)
+---
+
 # Attention Is All You Need - Mathematical Analysis (Steps 1-2)
 
 **Authors**: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin  
