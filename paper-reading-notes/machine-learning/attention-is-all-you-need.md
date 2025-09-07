@@ -1,4 +1,4 @@
-# Attention Is All You Need - Mathematical Analysis (Steps 1-2)
+# Attention Is All You Need - Mathematical Analysis
 
 **Authors**: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin  
 **Year**: 2017  
@@ -7,7 +7,7 @@
 
 ## 🎯 Research Objective
 
-The paper introduces the transformer framework that uses attention mechanisms without CNN/RNN and achieves better performances, which use less cost to train, and better translation accuracy.
+The paper introduces the transformer framework that uses attention mechnisms without CNN/RNN and achieves better performances, which use less cost to train, and better transalation accuracy.
 
 ## 📚 Mathematical Foundation
 
@@ -555,6 +555,128 @@ Input: X ∈ ℝ^(6×512)  ["AAPL", "stock", "price", "rose", "5%", "today"]
 
 **Key Insight**: Each head learns to focus on different types of relationships, and the final output combines all these specialized perspectives.
 
+### Step 3: Positional Encoding
+
+Since the Transformer contains no recurrence or convolution, positional information must be injected. The paper uses sinusoidal positional encodings:
+
+$$PE_{(pos, 2i)} = \sin(pos / 10000^{2i/d_{\text{model}}})$$
+$$PE_{(pos, 2i+1)} = \cos(pos / 10000^{2i/d_{\text{model}}})$$
+
+**Mathematical Justification**:
+
+1. **Uniqueness**: Each position gets a unique encoding due to the sinusoidal functions.
+
+2. **Relative Position**: The encoding allows the model to easily learn to attend by relative positions, since for any fixed offset $k$:
+   $$PE_{pos+k} = PE_{pos} \cdot PE_k$$
+
+3. **Extrapolation**: The model can attend to positions beyond those seen during training.
+
+### Step 4: Feed-Forward Networks
+
+Each layer contains a fully connected feed-forward network:
+
+$$\text{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2$$
+
+**Mathematical Properties**:
+
+1. **ReLU Activation**: The $\max(0, \cdot)$ function provides non-linearity and helps with gradient flow.
+
+2. **Dimensionality**: Typically $d_{ff} = 4 \cdot d_{\text{model}}$ to provide sufficient capacity.
+
+3. **Position-wise**: Applied to each position separately and identically.
+
+### Step 5: Layer Normalization and Residual Connections
+
+The Transformer uses residual connections around each sub-layer, followed by layer normalization:
+
+$$\text{LayerNorm}(x + \text{Sublayer}(x))$$
+
+**Mathematical Definition of Layer Normalization**:
+
+$$\text{LayerNorm}(x) = \gamma \odot \frac{x - \mu}{\sigma} + \beta$$
+
+where:
+
+- $\mu = \frac{1}{d} \sum_{i=1}^{d} x_i$ (mean)
+- $\sigma = \sqrt{\frac{1}{d} \sum_{i=1}^{d} (x_i - \mu)^2}$ (standard deviation)
+- $\gamma$ and $\beta$ are learnable parameters
+
+## 🔬 Theoretical Analysis
+
+### Computational Complexity
+
+**Self-Attention**: $O(n^2 \cdot d)$ where $n$ is the sequence length and $d$ is the representation dimension.
+
+**Recurrent Layers**: $O(n \cdot d^2)$ per layer.
+
+**Convolutional Layers**: $O(k \cdot n \cdot d^2)$ where $k$ is the kernel width.
+
+**Comparison**: Self-attention is faster when $n < d$, which is often the case for sentence-level tasks.
+
+### Parallelization
+
+The key advantage of self-attention is the constant number of sequential operations required between any two positions in the input/output sequences, making it highly parallelizable.
+
+## 📊 Experimental Results
+
+### Step 6: Performance Analysis
+
+The paper reports results on:
+
+1. **WMT 2014 English-to-German**: 28.4 BLEU (vs. 25.16 for previous best)
+2. **WMT 2014 English-to-French**: 41.8 BLEU (vs. 40.46 for previous best)
+3. **Training Time**: 3.5 days on 8 P100 GPUs (vs. weeks for RNN-based models)
+
+### Step 7: Ablation Studies
+
+Key findings from ablation studies:
+
+1. **Number of Attention Heads**: 8 heads performed best
+2. **Attention Type**: Self-attention was crucial for performance
+3. **Position Encoding**: Learned vs. sinusoidal performed similarly
+
+## 🔍 Critical Analysis
+
+### Strengths
+
+1. **Mathematical Elegance**: The attention mechanism provides a clean, interpretable way to model dependencies.
+
+2. **Parallelization**: Unlike RNNs, all positions can be processed in parallel.
+
+3. **Long-Range Dependencies**: Direct connections between all positions eliminate the vanishing gradient problem.
+
+### Limitations
+
+1. **Quadratic Complexity**: The $O(n^2)$ complexity becomes prohibitive for very long sequences.
+
+2. **Position Encoding**: The fixed sinusoidal encoding may not be optimal for all tasks.
+
+3. **Memory Requirements**: Storing attention weights requires $O(n^2)$ memory.
+
+## 💡 Key Insights for TabPFN
+
+### Step 8: Connection to Tabular Data
+
+The attention mechanism's ability to model arbitrary dependencies between positions is crucial for TabPFN:
+
+1. **Set-Valued Inputs**: TabPFN processes sets of (features, label) pairs, where attention determines which examples are most relevant.
+
+2. **In-Context Learning**: The attention weights effectively implement a form of in-context learning by focusing on relevant training examples.
+
+3. **No Position Dependence**: Unlike sequential data, tabular data doesn't have inherent ordering, making the position-independent nature of attention beneficial.
+
+### Mathematical Connection
+
+In TabPFN, the attention mechanism can be viewed as:
+
+$$\text{Attention}(Q_{\text{test}}, K_{\text{train}}, V_{\text{train}}) = \text{softmax}\left(\frac{Q_{\text{test}}K_{\text{train}}^T}{\sqrt{d_k}}\right)V_{\text{train}}$$
+
+where:
+
+- $Q_{\text{test}}$ represents the test example
+- $K_{\text{train}}$ and $V_{\text{train}}$ represent the training examples
+- The attention weights determine which training examples are most relevant for prediction
+
 ## 🧪 Corresponding Experiment
 
 **Experiment**: [Transformer Building Blocks Implementation](../experimentations/ml-experiments/transformer_building_blocks.py)  
@@ -575,11 +697,11 @@ Input: X ∈ ℝ^(6×512)  ["AAPL", "stock", "price", "rose", "5%", "today"]
 
 2. **Multi-Head Architecture**: Multiple attention heads allow the model to attend to different types of relationships simultaneously.
 
-3. **Cross-Attention Applications**: Attention can be applied between any different sequences, not just different languages.
+3. **Positional Encoding**: Sinusoidal encodings provide a unique way to inject positional information without adding parameters.
 
-4. **Dimension Guidelines**: $d_{\text{model}} \geq \sqrt{V}$ provides a principled way to choose embedding dimensions.
+4. **Computational Efficiency**: The attention mechanism offers better parallelization than RNNs while maintaining competitive performance.
 
-5. **Linear Projections**: Create specialized subspaces for each attention head, enabling diverse attention patterns.
+5. **TabPFN Foundation**: The attention mechanism's ability to model arbitrary dependencies is crucial for TabPFN's in-context learning approach.
 
 ---
 
